@@ -1,7 +1,7 @@
 export default class Table {
     constructor(element) {
         const table = document.createElement("table");
-        element.appendChild(table);
+        element.append(table);
         this._element = table;
     };
 
@@ -21,38 +21,39 @@ export default class Table {
                     throw new Error("Неверный порядок сортировки")
                 }
             }
-            tableHeaders.appendChild(tableHeader);
+            tableHeaders.append(tableHeader);
         };
-        this._element.appendChild(tableHeaders);
+        const sortedList = [...filmsList];
+        this._element.append(tableHeaders);
         if (column === undefined) {
             ;
         } else if (column === 'title') {
-            filmsList.sort((a, b) => a[column].localeCompare(b[column]))
+            sortedList.sort((a, b) => a[column].localeCompare(b[column]))
         } else if (['id', 'year', 'imdb'].includes(column)) {
-            filmsList.sort((a, b) => +a[column] - +b[column])
+            sortedList.sort((a, b) => +a[column] - +b[column])
         } else {
             throw new Error('Передан неверный параметр колонки');
         }
         if (type === 'up') {
             ;
         } else if (type === 'down') {
-            filmsList.reverse()
+            sortedList.reverse()
         } else {
             throw new Error("Неверный порядок сортировки")
         }
         
-        for (let film of filmsList) {
+        for (let film of sortedList) {
             const tableRow = document.createElement('tr');
             tableRow.dataset.id = film.id;
             tableRow.dataset.title = film.title;
             tableRow.dataset.year = film.year;
-            tableRow.dataset.imbd = film.imdb;
+            tableRow.dataset.imdb = film.imdb;
             for (let attribute of [film.id, film.title, `(${film.year})`, `imdb: ${film.imdb.toFixed(2)}`]) {
                 const tableData = document.createElement('td');
                 tableData.textContent = attribute;
-                tableRow.appendChild(tableData);
+                tableRow.append(tableData);
             };
-            this._element.appendChild(tableRow);
+            this._element.append(tableRow);
         }
     };
 }
